@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <script>
+            // Start message listner and print on page
+            window.onmessage = function(e) {
+                var main_div = document.getElementById("container")
+                var tag = document.createElement("p")
+                tag.innerText = e.data + " from : " + e.origin
+                main_div.appendChild(tag)
+            }
+            // As soon as frame is created send message to parent page
+            window.parent.postMessage("got message from frame {{counter}}", 'http://test.com:5000')
+            
+            //Following message will only be sent if top frame and iframe are on http://test.com/5000
+            //It will cause exception. Check browser console
+            var someFrame = window.parent.document.getElementById("frametop").contentWindow
+            someFrame.postMessage("text", "*")
+
+            // send message to specific frame on the parent page
+            function sendMessage(){
+                var frame_number = document.getElementById("frame_number").value
+                var frame_text = document.getElementById("frame_text").value
+                var pass_data = {
+                    "message": frame_text,
+                    "id": frame_number
+                }
+                window.parent.postMessage(JSON.stringify(pass_data), 'http://test.com:5000')
+            }
+        </script>
+    </head>
+    <body>
+        This is Frame {{counter}}
+        <br>
+        <input type="text" id="frame_number">
+        <input type="text" id="frame_text">
+        <button onclick="sendMessage()">Send Message</button>
+        <br><br>
+        <div id="container"></div>
+    </body>
+</html>

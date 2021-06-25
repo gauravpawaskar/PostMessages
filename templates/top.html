@@ -1,0 +1,73 @@
+<html>
+    <body>
+        <script>
+            //Counter to add frames at 1.test.com, 2.test.com etc.
+            var counter = 0
+
+            // Event listner to receive messages from any child frame
+            window.onmessage = function(e) {
+
+                // Print message on web page
+                var main_div = document.getElementById("messages")
+                var tag = document.createElement("p")
+                tag.innerText = e.data + " from : " + e.origin
+                main_div.appendChild(tag)
+
+                // if message is json then route the message to another child frame
+                // This is basically getting message from 1 child frame and send to 
+                // another child from whos id is mentioned in json
+                try {
+                    var pass_data = JSON.parse(e.data);
+                    sendMessage(pass_data["id"], pass_data["message"])
+                } catch (error) {}
+            } 
+            
+            // If "Add Frame" button is clicked then add a new frame with next counter value
+            // in domain e.g. 1.test.com, 2.test.com 
+            function addFrame() {
+                counter = counter+1
+                var main_div = document.getElementById("container")
+                var tag = document.createElement("iframe")
+                tag.setAttribute("src", "http://"+counter+".test.com:5000/frame/"+counter)
+                tag.setAttribute("title", "frame"+counter)
+                tag.setAttribute("id", "frame"+counter)
+                main_div.appendChild(tag)
+            }
+
+            // Add frames for chat/payment/.test.com or just test.com
+            function addSpecialFrame(domainName) {
+                var main_div = document.getElementById("container")
+                var tag = document.createElement("iframe")
+                if(domainName == 'top'){
+                    tag.setAttribute("src", "http://test.com:5000/frame/"+domainName)
+                    tag.setAttribute("title", "frame "+domainName)
+                    tag.setAttribute("id", "frame"+domainName)
+                } else {
+                    tag.setAttribute("src", "http://"+domainName+".test.com:5000/frame/"+domainName)
+                    tag.setAttribute("title", "frame "+domainName)
+                    tag.setAttribute("id", "frame"+domainName)
+                }
+                main_div.appendChild(tag)
+            }
+
+            // Send message to any frame based on frame number. 
+            // Send message to 1.test.com. 2.test.com or chat.test.com etc.
+            function sendMessage(frame_number, frame_text){
+                var frame = document.getElementById("frame"+frame_number).contentWindow
+                frame.postMessage(frame_text, '*')
+            }
+        </script>
+        <div id="container"> </div>
+
+        <button onclick="addFrame()">Add Frame</button>
+        <button onclick="addSpecialFrame('chat')">Add Chat Domain Frame</button>
+        <button onclick="addSpecialFrame('payment')">Add Payment Domain Frame</button>
+        <button onclick="addSpecialFrame('top')">Add TopLevel Domain Frame</button>
+        <br><br>
+        <input type="text" id="frame_number">
+        <input type="text" id="frame_text">
+        <button onclick="sendMessage(document.getElementById('frame_number').value, document.getElementById('frame_text').value)">Send Message</button>
+        <br><br>
+        <div id="messages"> </div>
+    </body>
+</html>
