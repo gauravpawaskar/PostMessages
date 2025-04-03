@@ -9,7 +9,7 @@
                 main_div.appendChild(tag)
             }
             // As soon as frame is created send message to parent page
-            window.parent.postMessage("got message from frame {{counter}}", 'http://test.com:5000')
+            window.parent.postMessage("got message from frame {{counter}}", 'http://{{hostname}}')
             
             //Following message will only be sent if top frame and iframe are on http://test.com/5000
             //It will cause exception. Check browser console
@@ -24,15 +24,15 @@
                     "message": frame_text,
                     "id": frame_number
                 }
-                window.parent.postMessage(JSON.stringify(pass_data), 'http://test.com:5000')
+                window.parent.postMessage(JSON.stringify(pass_data), 'http://{{hostname}}')
             }
         </script>
     </head>
     <body>
-        This is Frame {{counter}}
+        Frame ID: {{counter}}
         <br>
-        <input type="text" id="frame_number">
-        <input type="text" id="frame_text">
+        Frame ID<input type="text" id="frame_number">
+        Text<input type="text" id="frame_text">
         <button onclick="sendMessage()">Send Message</button>
         <br><br>
         <div id="container"></div>

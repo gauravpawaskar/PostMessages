@@ -28,7 +28,7 @@
                 counter = counter+1
                 var main_div = document.getElementById("container")
                 var tag = document.createElement("iframe")
-                tag.setAttribute("src", "http://"+counter+".test.com:5000/frame/"+counter)
+                tag.setAttribute("src", "http://"+counter+"."+window.location.host+"/frame/"+counter)
                 tag.setAttribute("title", "frame"+counter)
                 tag.setAttribute("id", "frame"+counter)
                 main_div.appendChild(tag)
@@ -39,11 +39,11 @@
                 var main_div = document.getElementById("container")
                 var tag = document.createElement("iframe")
                 if(domainName == 'top'){
-                    tag.setAttribute("src", "http://test.com:5000/frame/"+domainName)
+                    tag.setAttribute("src", "http://"+window.location.host+"/frame/"+domainName)
                     tag.setAttribute("title", "frame "+domainName)
                     tag.setAttribute("id", "frame"+domainName)
                 } else {
-                    tag.setAttribute("src", "http://"+domainName+".test.com:5000/frame/"+domainName)
+                    tag.setAttribute("src", "http://"+domainName+"."+window.location.host+"/frame/"+domainName)
                     tag.setAttribute("title", "frame "+domainName)
                     tag.setAttribute("id", "frame"+domainName)
                 }
@@ -64,8 +64,8 @@
         <button onclick="addSpecialFrame('payment')">Add Payment Domain Frame</button>
         <button onclick="addSpecialFrame('top')">Add TopLevel Domain Frame</button>
         <br><br>
-        <input type="text" id="frame_number">
-        <input type="text" id="frame_text">
+        Frame ID<input type="text" id="frame_number">
+        Text<input type="text" id="frame_text">
         <button onclick="sendMessage(document.getElementById('frame_number').value, document.getElementById('frame_text').value)">Send Message</button>
         <br><br>
         <div id="messages"> </div>
