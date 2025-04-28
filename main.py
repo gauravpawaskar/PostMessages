@@ -7,7 +7,7 @@ hostname = ""
 
 @app.route('/', methods=['GET'])
 def index():
-    global hostnameÏ
+    global hostname
     logging.info(request.host)
     hostname = request.host
     return render_template('top.html')
